@@ -1,0 +1,46 @@
+{{ $posts := where site.RegularPages "Type" "blog" }}
+
+{{ $scratch := newScratch }}
+{{ $scratch.Set "longCount" 0 }}
+{{ range $posts }}
+    {{ $scratch.Add "wordcount" .WordCount }}
+    {{ if ge .WordCount ($scratch.Get "longCount") }}
+        {{ $scratch.Set "longestPost" . }}
+        {{ $scratch.Set "longCount" .WordCount }}
+    {{ end }}
+{{ end }}
+
+{{ $postCount :=  len ($posts) }}
+{{ $wordCount := $scratch.Get "wordcount" }}
+{{ $avgPostLength := div $wordCount $postCount }}
+
+<table class="table">
+    <tr>
+        <td width="40%">Total de entradas publicadas</td>
+        <td width="60%">{{ $postCount | lang.NumFmt 0 }}</td>
+    </tr>
+    <tr>
+        <td>Número total de palabras escritas</td>
+        <td>{{ $wordCount | lang.NumFmt 0 }}{{ if gt $wordCount 40000 }} (casi {{ (div $wordCount 40000) | lang.NumFmt 0 }} novelas){{ end }}</td>
+    </tr>
+    <tr>
+        <td>Número promedio de palabras por entrada</td>
+        <td>{{ $avgPostLength | lang.NumFmt 0 }}</td>
+    </tr>
+    <tr>
+        <td>Primera entrada publicada</td>
+        <td>
+            {{ range last 1 $posts }}
+                <a href="{{ .Permalink }}">{{ .Title }}</a>, publicada el {{ .Date.Format "2006-01-02" }}
+            {{ end }}
+        </td>
+    </tr>
+    <tr>
+        <td>Entrada más larga publicada</td>
+        <td>
+            {{ with $scratch.Get "longestPost" }}
+                <a href="{{ .Permalink }}">{{ .Title }}</a>, con {{ .WordCount | lang.NumFmt 0 }} palabras
+            {{ end }}
+        </td>
+    </tr>
+</table>
