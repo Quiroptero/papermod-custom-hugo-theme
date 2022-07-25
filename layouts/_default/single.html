@@ -37,7 +37,7 @@
 
   <footer class="post-footer">
     {{- $etiquetas := .Language.Params.Taxonomies.tag | default "etiquetas" }}
-    <ul class="post-etiquetas">
+    <ul class="post-tags">
       {{- range ($.GetTerms $etiquetas) }}
       <li><a href="{{ .Permalink }}">{{ .LinkTitle }}</a></li>
       {{- end }}
