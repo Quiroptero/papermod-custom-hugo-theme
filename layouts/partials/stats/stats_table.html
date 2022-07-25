@@ -20,8 +20,8 @@
         <td width="60%">{{ $postCount | lang.NumFmt 0 }}</td>
     </tr>
     <tr>
-        <td>Número total de palabras escritas</td>
-        <td>{{ $wordCount | lang.NumFmt 0 }}{{ if gt $wordCount 40000 }} (casi {{ (div $wordCount 40000) | lang.NumFmt 0 }} novelas){{ end }}</td>
+        <td>Total de palabras escritas</td>
+        <td>{{ $wordCount | lang.NumFmt 0 }}</td>
     </tr>
     <tr>
         <td>Número promedio de palabras por entrada</td>

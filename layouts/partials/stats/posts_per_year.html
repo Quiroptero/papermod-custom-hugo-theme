@@ -3,7 +3,9 @@
 {{ $grouped := $posts.GroupByDate "2006" }}
 
 <div style="width: 100%;height: 300px;margin: 30px auto">
-    <canvas id="yearchart"></canvas>
+    <canvas id="yearchart">
+        <p>Gráfica de línea que muestra el número de publicaciones por año</p>
+    </canvas>
 </div>
 
 <table class="post-stats-tbl">
@@ -12,31 +14,58 @@
         <th width="70%">Número de entradas</td>
     </tr>
     {{ range $grouped.Reverse }}
-	{{ $yearPostCount := len (where .Pages "Type" "blog") }}
-		<tr>
+        {{ $yearPostCount := len (where .Pages "Type" "blog") }}
+        <tr>
             <td>{{ .Key }}</td>
             <td>{{ $yearPostCount | lang.NumFmt 0 }}</td>
         </tr>
-		{{ $scratch.Add "yearKeys" "'"  }}
-		{{ $scratch.Add "yearKeys" .Key  }}
-		{{ $scratch.Add "yearKeys" "',"  }}
-		{{ $scratch.Add "yearCount" (string $yearPostCount) }}
-		{{ $scratch.Add "yearCount" ","  }}
+        {{ $scratch.Add "yearKeys" (slice .Key) }}
+        {{ $scratch.Add "yearCount" (slice $yearPostCount) }}
     {{ end }}
 </table>
-
-{{ $chartPre := "{type: 'line',data: {labels: [" }}
-{{ $chartYearKeys := trim ($scratch.Get "yearKeys") ","}}
-{{ $chartYearCount := trim ($scratch.Get "yearCount") ","}}
-{{ $chartMid := "],datasets: [{label: 'Entradas publicadas',data: [" }}
-{{ $chartPost := "],backgroundColor: 'rgb(54, 162, 235)',borderColor: 'rgb(54, 162, 235)',borderWidth: 1}]},options: {maintainAspectRatio: false,scales: {yAxes: [{ticks: {beginAtZero: true}}]}}}" }}
-
-
-{{ $chartData := printf "%s" $chartPost | printf "%s%s" $chartYearCount | printf "%s%s" $chartMid | printf "%s%s" $chartYearKeys | printf "%s%s" $chartPre | printf "%s" }}
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js/dist/chart.min.js"></script>
 <script type="text/javascript">
     var ctx = document.getElementById('yearchart').getContext('2d');
-    var options = {{ $chartData | safeJS }};
+
+    let yearKeys = [{{ range $scratch.Get "yearKeys" }}{{ . }}, {{end}}];
+    let yearCount = [{{ range $scratch.Get "yearCount" }}{{ . }}, {{end}}];
+
+    var options = {
+        type: 'line',
+        data: {
+            labels: yearKeys,
+            datasets: [
+                {
+                    label: 'Entradas publicadas',
+                    data: yearCount,
+                    backgroundColor: 'rgb(54, 162, 235)',
+                    borderColor: 'rgb(54, 162, 235)',
+                    borderWidth: 3
+                }
+            ]
+        },
+        options: {
+            maintainAspectRatio: false,
+            animation: false,
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    grid: {
+                        display: false
+                    },
+                    ticks: {
+                        stepSize: 5
+                    }
+                },
+                x: {
+                    grid: {
+                        display: false
+                    }
+                }
+            }
+        }
+    };
+
     new Chart(ctx, options);
 </script>
