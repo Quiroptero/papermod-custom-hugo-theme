@@ -10,17 +10,40 @@
 
 <table class="post-stats-tbl">
     <tr>
-        <th width="30%">Año</td>
-        <th width="70%">Número de entradas</td>
+        <th width="8%">Año</td>
+        <th width="10%">Entradas</td>
+        <th width="10%">Palabras</td>
+        <th width="15%">Promedio de palabras</td>
+        <th>Entrada más larga</td>
     </tr>
     {{ range $grouped.Reverse }}
         {{ $yearPostCount := len (where .Pages "Type" "blog") }}
+
+        {{ $scratch.Set "wordcount" 0 }}
+        {{ $scratch.Set "longcount" 0 }}
+        {{ range .Pages }}
+            {{ $scratch.Add "wordcount" .WordCount }}
+            {{ if ge .WordCount ($scratch.Get "longcount") }}
+                {{ $scratch.Set "longestpost" . }}
+                {{ $scratch.Set "longcount" .WordCount }}
+            {{ end }}
+        {{ end }}
+
+        {{ $yearWordAvg := div ($scratch.Get "wordcount") $yearPostCount }}
         <tr>
             <td>{{ .Key }}</td>
             <td>{{ $yearPostCount | lang.NumFmt 0 }}</td>
+            <td>{{ $scratch.Get "wordcount" | lang.NumFmt 0 }}</td>
+            <td>{{ $yearWordAvg | lang.NumFmt 0 }}</td>
+            <td>
+                {{ with $scratch.Get "longestpost" }}
+                    <a href="{{ .Permalink }}">{{ .Title }}</a>, con {{ .WordCount | lang.NumFmt 0 }} palabras
+                {{ end }}
+            </td>
         </tr>
         {{ $scratch.Add "yearKeys" (slice .Key) }}
         {{ $scratch.Add "yearCount" (slice $yearPostCount) }}
+        {{ $scratch.Add "yearAvg" (slice $yearWordAvg) }}
     {{ end }}
 </table>
 
@@ -30,6 +53,7 @@
 
     let yearKeys = [{{ range $scratch.Get "yearKeys" }}{{ . }}, {{end}}];
     let yearCount = [{{ range $scratch.Get "yearCount" }}{{ . }}, {{end}}];
+    let yearAvg = [{{ range $scratch.Get "yearAvg" }}{{ . }}, {{end}}];
 
     var options = {
         type: 'line',
@@ -38,9 +62,18 @@
             datasets: [
                 {
                     label: 'Entradas publicadas',
+                    yAxisID: 'A',
                     data: yearCount,
                     backgroundColor: 'rgb(54, 162, 235)',
                     borderColor: 'rgb(54, 162, 235)',
+                    borderWidth: 3
+                },
+                {
+                    label: 'Promedio de palabras',
+                    yAxisID: 'B',
+                    data: yearAvg,
+                    backgroundColor: 'rgba(255, 99, 132, 1)',
+                    borderColor: 'rgba(255, 99, 132, 1)',
                     borderWidth: 3
                 }
             ]
@@ -49,13 +82,24 @@
             maintainAspectRatio: false,
             animation: false,
             scales: {
-                y: {
+                A: {
                     beginAtZero: true,
+                    position: 'left',
                     grid: {
                         display: false
                     },
                     ticks: {
                         stepSize: 5
+                    }
+                },
+                B: {
+                    beginAtZero: true,
+                    position: 'right',
+                    grid: {
+                        display: false
+                    },
+                    ticks: {
+                        stepSize: 200
                     }
                 },
                 x: {
