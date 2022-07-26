@@ -1,6 +1,6 @@
 <div class="tagcloud">
     {{ if ne (len .ctx.Site.Taxonomies.etiquetas) 0  }}
-      {{ $largestFontSize := 1.4 }}
+      {{ $largestFontSize := 1.8 }}
       {{ $smallestFontSize := 1.0 }}
       {{ $fontSpread := sub $largestFontSize $smallestFontSize }}
       {{ $max := add (len (index .ctx.Site.Taxonomies.etiquetas.ByCount 0).Pages) 1 }}
@@ -12,8 +12,7 @@
           {{ $currentFontSize := (add $smallestFontSize (mul (sub $tagCount $min) $fontStep) ) }}
           {{ $weight := div (sub (math.Log $tagCount) (math.Log $min)) (sub (math.Log $max) (math.Log $min)) }}
           {{ $currentFontSize := (add $smallestFontSize (mul (sub $largestFontSize $smallestFontSize) $weight)) }}
-            <a href="{{ "/etiquetas/" | relURL }}{{ $name | urlize }}"
-            class="tagcloud-item" style="font-size: {{ $currentFontSize }}rem;">
+            <a href="{{ "/etiquetas/" | relURL }}{{ $name | urlize }}" class="tagcloud-item" style="font-size: {{ $currentFontSize }}rem;">
               {{ $name }}<sup>{{ $tagCount }}</sup>
             </a>
         {{ end }}
