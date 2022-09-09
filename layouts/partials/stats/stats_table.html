@@ -2,6 +2,7 @@
 
 {{ $scratch := newScratch }}
 {{ $scratch.Set "longCount" 0 }}
+
 {{ range $posts }}
     {{ $scratch.Add "wordcount" .WordCount }}
     {{ if ge .WordCount ($scratch.Get "longCount") }}
@@ -24,11 +25,11 @@
         <td>{{ $wordCount | lang.NumFmt 0 }}</td>
     </tr>
     <tr>
-        <td>Número promedio de palabras por entrada</td>
+        <td>Promedio de palabras por entrada</td>
         <td>{{ $avgPostLength | lang.NumFmt 0 }}</td>
     </tr>
     <tr>
-        <td>Primera entrada publicada</td>
+        <td>Primera entrada</td>
         <td>
             {{ range last 1 $posts }}
                 <a href="{{ .Permalink }}">{{ .Title }}</a>, publicada el {{ .Date.Format "2006-01-02" }}
@@ -36,7 +37,15 @@
         </td>
     </tr>
     <tr>
-        <td>Entrada más larga publicada</td>
+        <td>Entrada más reciente</td>
+        <td>
+            {{ range first 1 $posts }}
+                <a href="{{ .Permalink }}">{{ .Title }}</a>, publicada el {{ .Date.Format "2006-01-02" }}
+            {{ end }}
+        </td>
+    </tr>
+    <tr>
+        <td>Entrada más larga</td>
         <td>
             {{ with $scratch.Get "longestPost" }}
                 <a href="{{ .Permalink }}">{{ .Title }}</a>, con {{ .WordCount | lang.NumFmt 0 }} palabras
