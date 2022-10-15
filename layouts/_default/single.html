@@ -29,6 +29,12 @@
 
   {{- if .Content }}
   <div class="post-content">
+    {{ if and (.Param "showLastmod") (not .Lastmod.IsZero) }}
+      {{ $dateString := time.Format "Monday 2 de January, 2006" .Lastmod }}
+      <p><i>Actualizado por última vez: <b>{{ $dateString }}</b></i></p>
+      <hr></hr>
+    {{ end }}
+
     {{- if not (.Param "disableAnchoredHeadings") }}
     {{- partial "anchored_headings.html" .Content -}}
     {{- else }}{{ .Content }}{{ end }}
