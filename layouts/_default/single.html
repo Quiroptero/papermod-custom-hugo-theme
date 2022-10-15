@@ -30,7 +30,7 @@
   {{- if .Content }}
   <div class="post-content">
     {{ if and (.Param "showLastmod") (not .Lastmod.IsZero) }}
-      {{ $dateString := time.Format "Monday 2 de January, 2006" .Lastmod }}
+      {{ $dateString := .Lastmod.Local | time.Format ":date_full" }}
       <p><i>Actualizado por última vez: <b>{{ $dateString }}</b></i></p>
       <hr></hr>
     {{ end }}
