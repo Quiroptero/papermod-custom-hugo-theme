@@ -3,16 +3,16 @@
     {{- if .Site.Copyright }}
     <span>{{ .Site.Copyright | markdownify }}</span>
     {{- else }}
-    <span>&copy; {{ now.Year }} <a href="{{ "" | absLangURL }}">{{ .Site.Title }}</a></span>
+    <span>&copy; "2017 - "{{ now.Year }} <a href="{{ "" | absLangURL }}">{{ .Site.Title }}</a></span>
     {{- end }}
     <span>
         Powered by
-        <a href="https://gohugo.io/" rel="noopener noreferrer" target="_blank">Hugo</a> &
-        <a href="https://git.io/hugopapermod" rel="noopener" target="_blank">PaperMod</a>
+        <a href="https://gohugo.io/" rel="noopener noreferrer">Hugo</a> &
+        <a href="https://git.io/hugopapermod" rel="noopener">PaperMod</a>
         |
-        <a href="https://www.standwithukraine.how/" rel="noopener" target="_blank">#StandWithUkraine 🇺🇦</a>
+        <a href="https://www.standwithukraine.how/" rel="noopener">#StandWithUkraine 🇺🇦</a>
 
-        <a href="https://saveualist.com/" rel="noopener" target="_blank">#ArmUkraineNow 🇺🇦</a>
+        <a href="https://saveualist.com/" rel="noopener">#ArmUkraineNow 🇺🇦</a>
     </span>
 </footer>
 {{- end }}
