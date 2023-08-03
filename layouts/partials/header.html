@@ -146,7 +146,9 @@
             {{- end }}
         </ul>
     </nav>
-    <nav class="nav">
-        <span id="random-quote" class="footer"></span>
-    </nav>
+    {{ if .IsHome }}
+        <nav class="nav">
+            <span id="random-quote" class="footer"></span>
+        </nav>
+    {{ end }}
 </header>
