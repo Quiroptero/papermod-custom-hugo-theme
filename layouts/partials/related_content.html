@@ -1,4 +1,4 @@
-{{ $related := .Site.RegularPages.Related . | first 3 }}
+{{ $related := where (site.RegularPages.Related . ) "Type" "blog" | first 3 }}
 {{ with $related }}
 <br>
 <h4>Lee entradas relacionadas</h4>
