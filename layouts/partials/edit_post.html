@@ -1,0 +1,7 @@
+{{- if and (eq .Type "blog") (not (.Param "editPost.disabled")) -}}
+
+{{- if or .Params.author site.Params.author (.Param "ShowReadingTime") (not .Date.IsZero) .IsTranslated }}&nbsp;|&nbsp;{{- end -}}
+<a href="{{ site.Params.editPost.URL }}{{ .Title }}" rel="noopener noreferrer" target="_blank">
+    {{- site.Params.editPost.Text -}}
+</a>
+{{- end }}
