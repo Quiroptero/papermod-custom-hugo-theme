@@ -59,8 +59,10 @@
     {{- partial "post_nav_links.html" . }}
     {{- end }}
 
-    {{- /* Show related content */ -}}
+    {{- /* Show related content only in blog posts*/ -}}
+    {{- if (eq .Type "blog") -}}
     {{- partial "related_content.html" . }}
+    {{- end -}}
 
     {{- if (and site.Params.ShowShareButtons (ne .Params.disableShare true)) }}
     {{- partial "share_icons.html" . -}}
