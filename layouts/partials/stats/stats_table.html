@@ -32,7 +32,7 @@
         <td>Primera entrada</td>
         <td>
             {{ range last 1 $posts }}
-                <a href="{{ .Permalink }}">{{ .Title }}</a>, publicada el {{ .Date.Format "2006-01-02" }}
+                <a href="{{ .Permalink }}">{{ .Title }}</a>, publicada el {{ .Date | time.Format ":date_full" }}
             {{ end }}
         </td>
     </tr>
@@ -40,7 +40,7 @@
         <td>Entrada más reciente</td>
         <td>
             {{ range first 1 $posts }}
-                <a href="{{ .Permalink }}">{{ .Title }}</a>, publicada el {{ .Date.Format "2006-01-02" }}
+                <a href="{{ .Permalink }}">{{ .Title }}</a>, publicada el {{ .Date | time.Format ":date_full" }}
             {{ end }}
         </td>
     </tr>
